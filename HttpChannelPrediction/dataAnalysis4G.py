@@ -96,8 +96,8 @@ Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
 from sklearn import svm
 svr = svm.SVR()
 svr.fit(Xtr, Ytr)
-print 'Training error: ', 1-svr.score(Xtr,Ytr)
-print 'Validation error: ', 1-svr.score(Xva,Yva)
+print('Training error: '  , 1-svr.score(Xtr,Ytr))
+print('Validation error: ', 1-svr.score(Xva,Yva))
 
 import matplotlib.pyplot as pl
 pl.figure()
