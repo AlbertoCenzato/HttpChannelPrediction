@@ -64,7 +64,8 @@ len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
 #-------------------------------------------
 
 #----- carica i dati ----- 
-data, N = dataLoaderMat('tram')
+data, N = dataLoaderVec('tram')
+'''
 train_size = 0.66
 Ntr = int(np.ceil(N*train_size))
 X = np.array([])
@@ -92,15 +93,26 @@ samples_va = slicer(validation, sliceLen, False)
 
 Xtr,Ytr = samples_tr[:, :sliceLen-2],samples_tr[:,sliceLen-1]
 Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
+'''
 
 #----- training -----
+testPerc = 0.66
+
 from sklearn import svm
+from sklearn.cross_validation import train_test_split
+
 minCerr = []
 minS = []
 for c in [0.01,0.1,1,10,100,1000,10000]:
+    print('-----------------ITERAZIONE CON C = ', c, '----------------')
     svr = svm.LinearSVR(verbose = True, max_iter = 1000000000, C = c)
-    min = chooseBestSplitLen(data = data, model = svr, max_size = 30)
+    sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
     np.append(minS, min)
+
+    samples = slicer(data, sliceLenOpt, True)
+    X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
+    Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
+
     svr.fit(Xtr, Ytr)
     print('Training error: '  , 1-svr.score(Xtr,Ytr))
     print('Validation error: ', 1-svr.score(Xva,Yva))
