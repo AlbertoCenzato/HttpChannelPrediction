@@ -64,7 +64,7 @@ len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
 #-------------------------------------------
 
 #----- carica i dati ----- 
-data, N = dataLoaderMat('car')
+data, N = dataLoaderMat('tram')
 train_size = 0.66
 Ntr = int(np.ceil(N*train_size))
 X = np.array([])
@@ -83,18 +83,19 @@ for i in range(0,N):
     else:
         validation = np.append(validation,data[i])
 
+print train.shape
+
 #----- slicing -----
-sliceLen = 10
+sliceLen = 30
 samples_tr = slicer(train,sliceLen, False)
 samples_va = slicer(validation, sliceLen, False)
 
 Xtr,Ytr = samples_tr[:, :sliceLen-2],samples_tr[:,sliceLen-1]
 Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
 
-
 #----- training -----
 from sklearn import svm
-svr = svm.SVR()
+svr = svm.LinearSVR(verbose = True, max_iter = 1000000000)
 svr.fit(Xtr, Ytr)
 print('Training error: '  , 1-svr.score(Xtr,Ytr))
 print('Validation error: ', 1-svr.score(Xva,Yva))
