@@ -19,6 +19,7 @@ def dataLoaderVec(path):
         data = np.vstack((data, df.values))
     return data[:,0]/data[:,1], data.shape[0]
 
+
 def slicer(data, sliceLen, overlap):
     N = data.shape[0]
     if (not overlap):
