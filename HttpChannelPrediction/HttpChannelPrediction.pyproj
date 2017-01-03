@@ -26,7 +26,6 @@
     <Compile Include="dataAnalysis4G.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="regression.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda27-64" />
