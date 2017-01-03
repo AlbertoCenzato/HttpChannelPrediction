@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>HttpChannelPrediction</Name>
     <RootNamespace>HttpChannelPrediction</RootNamespace>
-    <InterpreterId>Global|ContinuumAnalytics|Anaconda27-64</InterpreterId>
+    <InterpreterId>Global|ContinuumAnalytics|Anaconda35-64</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda27-64" />
+    <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda35-64" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

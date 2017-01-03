@@ -83,7 +83,7 @@ for i in range(0,N):
     else:
         validation = np.append(validation,data[i])
 
-print train.shape
+#print train.shape
 
 #----- slicing -----
 sliceLen = 30
@@ -95,10 +95,19 @@ Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
 
 #----- training -----
 from sklearn import svm
-svr = svm.LinearSVR(verbose = True, max_iter = 1000000000)
-svr.fit(Xtr, Ytr)
-print('Training error: '  , 1-svr.score(Xtr,Ytr))
-print('Validation error: ', 1-svr.score(Xva,Yva))
+minCerr = []
+minS = []
+for c in [0.01,0.1,1,10,100,1000,10000]:
+    svr = svm.LinearSVR(verbose = True, max_iter = 1000000000, C = c)
+    min = chooseBestSplitLen(data = data, model = svr, max_size = 30)
+    np.append(minS, min)
+    svr.fit(Xtr, Ytr)
+    print('Training error: '  , 1-svr.score(Xtr,Ytr))
+    print('Validation error: ', 1-svr.score(Xva,Yva))
+    np.append(minCerr, 1-svr.score(Xva,Yva))
+print (minCerr)
+print (minS)
+
 
 import matplotlib.pyplot as pl
 pl.figure()
