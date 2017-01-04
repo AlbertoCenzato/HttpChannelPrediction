@@ -114,7 +114,7 @@ Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
 testPerc = 0.66
 
 from sklearn import svm
-
+'''
 
 minCerr = []
 minS = []
@@ -151,25 +151,19 @@ for c in [0.001, 0.005,0.01]:
 print (minCerr)
 print (minS)
 
+'''
 #SVM altro package
-
+import sklearn.model_selection as m
 data, N = dataLoaderVec('tram')
-minCerr = []
-minS = []
-for c in [0.001,0.01, 0.1, 1, 10, 100]:
-    print('-----------------ITERAZIONE CON C = ', c, '----------------')
-    svr = svm.SVR(kernel = 'rbf', tol = 0.0001, C = c, max_iter = 100000, verbose = True)
-    sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
-    minS = np.append(minS, sliceLenOpt)
-    samples = slicer(data, sliceLenOpt, True)
-    X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
-    Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
-    svr.fit(Xtr, Ytr)
-    print('Training error SVM Cars: '  , 1-svr.score(Xtr,Ytr))
-    print('Validation error SVM cars: ', 1-svr.score(Xva,Yva))
-    minCerr = np.append(minCerr, 1-svr.score(Xva,Yva))
-print (minCerr)
-print (minS)
+parameters = {'C':[0.001,0.01, 0.1, 1, 10], 'epsilon':[0.05, 0.1, 0.2, 0.3]}
+svr = svm.LinearSVR()
+clf = m.GridSearchCV(svr, parameters, verbose = 3)
+samples = slicer(data, 6, True)
+X,Y = samples[:, :6-1], samples[:,6-1]
+Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
+clf.fit(Xtr, Ytr)
+print('Training error optimal SVM tram: '  , 1-clf.score(Xtr,Ytr))
+print('Validation error optimal SVM tram: ', 1-clf.score(Xva,Yva))
 
 '''
 import matplotlib.pyplot as pl
