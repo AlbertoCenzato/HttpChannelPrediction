@@ -13,11 +13,12 @@ data, N = dataLoaderVec('tram')
 from sklearn import linear_model as lm
 
 linReg = lm.LinearRegression()
-len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
+len = chooseBestSplitLen(data, linReg, max_size = 10, plot = True)
 samples = slicer(data, len, True)
 X,Y = samples[:, :len-1], samples[:,len-1]
 Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=0.66)
 linReg.fit(Xtr, Ytr)
+print('optimal split size' , len)
 print('Training error linReg Trams: '  , 1-linReg.score(Xtr,Ytr))
 print('Validation error linReg Trams: ', 1-linReg.score(Xva,Yva))
 
@@ -63,11 +64,12 @@ pl.show()
 
 data, N = dataLoaderVec('car')
 linReg = lm.LinearRegression()
-len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
+len = chooseBestSplitLen(data, linReg, max_size = 10, plot = True)
 samples = slicer(data, len, True)
 X,Y = samples[:, :len-1], samples[:,len-1]
 Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=0.66)
 linReg.fit(Xtr, Ytr)
+print('optimal split size' , len)
 print('Training error linReg Cars: '  , 1-linReg.score(Xtr,Ytr))
 print('Validation error linReg Cars: ', 1-linReg.score(Xva,Yva))
 
@@ -149,6 +151,27 @@ for c in [0.001, 0.005,0.01]:
 print (minCerr)
 print (minS)
 
+#SVM altro package
+
+data, N = dataLoaderVec('tram')
+minCerr = []
+minS = []
+for c in [0.001,0.01, 0.1, 1, 10, 100]:
+    print('-----------------ITERAZIONE CON C = ', c, '----------------')
+    svr = svm.SVR(kernel = 'rbf', tol = 0.0001, C = c, max_iter = 100000, verbose = True)
+    sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
+    minS = np.append(minS, sliceLenOpt)
+    samples = slicer(data, sliceLenOpt, True)
+    X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
+    Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
+    svr.fit(Xtr, Ytr)
+    print('Training error SVM Cars: '  , 1-svr.score(Xtr,Ytr))
+    print('Validation error SVM cars: ', 1-svr.score(Xva,Yva))
+    minCerr = np.append(minCerr, 1-svr.score(Xva,Yva))
+print (minCerr)
+print (minS)
+
+'''
 import matplotlib.pyplot as pl
 pl.figure()
 pl.plot(Yva[:100], 'b')
@@ -158,3 +181,4 @@ pl.show()
 pl.figure()
 pl.plot(validation[:2000], 'b')
 pl.show()
+'''
