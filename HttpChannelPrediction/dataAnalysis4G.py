@@ -105,14 +105,14 @@ minCerr = []
 minS = []
 for c in [0.01,0.1,1,10,100,1000,10000]:
     print('-----------------ITERAZIONE CON C = ', c, '----------------')
-    svr = svm.LinearSVR(verbose = True, max_iter = 1000000000, C = c)
+    svr = svm.LinearSVR(verbose = True, C = c)
     sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
+    #if sliceLenOpt == 1 :           #questa riga e la prossima le avevo aggiunte io, perchè ho notato che a volte il sliceLenOpt è uguale a 1 
+     #   sliceLenOpt = sliceLenOpt + 1          #e la cosa dà problemi perchè le matrici Xtr Xva etc vengono fuori con 0 colonne- non ha funzionato però
     np.append(minS, min)
-
     samples = slicer(data, sliceLenOpt, True)
     X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
     Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
-
     svr.fit(Xtr, Ytr)
     print('Training error: '  , 1-svr.score(Xtr,Ytr))
     print('Validation error: ', 1-svr.score(Xva,Yva))
