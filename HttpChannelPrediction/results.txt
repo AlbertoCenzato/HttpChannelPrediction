@@ -1,0 +1,14 @@
+
+
+Training error linReg Trams:  0.259644462527
+Validation error linReg Trams:  0.28978887979
+Training error linReg Cars:  0.453339645026
+Validation error linReg Cars:  0.421147800114
+
+Validation error SVM Trams wth c=[0.001, 0.005,0.01]
+[ 0.28502137  0.29012888  0.28273062]
+Optimal split size : [ 3.  6.  9.]
+
+Validation error SVM Cars wth c=[0.001, 0.005,0.01]
+[ 0.47678752  0.501172    0.43120597]
+Optimal split size : [ 6.  4.  4.]

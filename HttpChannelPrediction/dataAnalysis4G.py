@@ -2,6 +2,7 @@ import numpy as np
 
 from utils import dataLoaderMat, dataLoaderVec, slicer
 from crossValidation import chooseBestSplitLen
+from sklearn.cross_validation import train_test_split
 
  #-------------------------------------------------
  #--------- LINEAR REGRESSION ---------------------
@@ -13,6 +14,12 @@ from sklearn import linear_model as lm
 
 linReg = lm.LinearRegression()
 len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
+samples = slicer(data, len, True)
+X,Y = samples[:, :len-1], samples[:,len-1]
+Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=0.66)
+linReg.fit(Xtr, Ytr)
+print('Training error linReg Trams: '  , 1-linReg.score(Xtr,Ytr))
+print('Validation error linReg Trams: ', 1-linReg.score(Xva,Yva))
 
 '''
 # Here we predict a completely new trajectory out of the old ones
@@ -55,9 +62,15 @@ pl.show()
 # same as above, using cars
 
 data, N = dataLoaderVec('car')
-
 linReg = lm.LinearRegression()
 len = chooseBestSplitLen(data, linReg, max_size = 30, plot = True)
+samples = slicer(data, len, True)
+X,Y = samples[:, :len-1], samples[:,len-1]
+Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=0.66)
+linReg.fit(Xtr, Ytr)
+print('Training error linReg Cars: '  , 1-linReg.score(Xtr,Ytr))
+print('Validation error linReg Cars: ', 1-linReg.score(Xva,Yva))
+
 
 #-------------------------------------------
 #------------ USING SVMs -------------------
@@ -99,27 +112,42 @@ Xva,Yva = samples_va[:, :sliceLen-2],samples_va[:,sliceLen-1]
 testPerc = 0.66
 
 from sklearn import svm
-from sklearn.cross_validation import train_test_split
+
 
 minCerr = []
 minS = []
-for c in [0.01,0.1,1,10,100,1000,10000]:
+for c in [0.001, 0.005,0.01]:
     print('-----------------ITERAZIONE CON C = ', c, '----------------')
-    svr = svm.LinearSVR(verbose = True, C = c)
+    svr = svm.LinearSVR(verbose = True, C = c, max_iter = 100000)
     sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
-    #if sliceLenOpt == 1 :           #questa riga e la prossima le avevo aggiunte io, perchè ho notato che a volte il sliceLenOpt è uguale a 1 
-     #   sliceLenOpt = sliceLenOpt + 1          #e la cosa dà problemi perchè le matrici Xtr Xva etc vengono fuori con 0 colonne- non ha funzionato però
-    np.append(minS, min)
+    minS = np.append(minS, sliceLenOpt)
     samples = slicer(data, sliceLenOpt, True)
     X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
     Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
     svr.fit(Xtr, Ytr)
-    print('Training error: '  , 1-svr.score(Xtr,Ytr))
-    print('Validation error: ', 1-svr.score(Xva,Yva))
-    np.append(minCerr, 1-svr.score(Xva,Yva))
+    print('Training error SVM Trams: '  , 1-svr.score(Xtr,Ytr))
+    print('Validation error SVM Trams: ', 1-svr.score(Xva,Yva))
+    minCerr = np.append(minCerr, 1-svr.score(Xva,Yva))
 print (minCerr)
 print (minS)
 
+data, N = dataLoaderVec('car')
+minCerr = []
+minS = []
+for c in [0.001, 0.005,0.01]:
+    print('-----------------ITERAZIONE CON C = ', c, '----------------')
+    svr = svm.LinearSVR(verbose = True, C = c, max_iter = 100000)
+    sliceLenOpt = chooseBestSplitLen(data, svr, max_size = 10)
+    minS = np.append(minS, sliceLenOpt)
+    samples = slicer(data, sliceLenOpt, True)
+    X,Y = samples[:, :sliceLenOpt-1], samples[:,sliceLenOpt-1]
+    Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
+    svr.fit(Xtr, Ytr)
+    print('Training error SVM Cars: '  , 1-svr.score(Xtr,Ytr))
+    print('Validation error SVM cars: ', 1-svr.score(Xva,Yva))
+    minCerr = np.append(minCerr, 1-svr.score(Xva,Yva))
+print (minCerr)
+print (minS)
 
 import matplotlib.pyplot as pl
 pl.figure()

@@ -27,4 +27,4 @@ def chooseBestSplitLen(data, model, max_size, testPerc = 0.33, plot = False):
       pl.legend(loc=4)
       pl.show()
 
-   return np.argmin(validation_error[2:])
+   return np.argmin(validation_error[2:]) + 2
