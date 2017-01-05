@@ -1,4 +1,5 @@
 import numpy as np
+import pykalman as klmn
 
 from utils import dataLoaderMat, dataLoaderVec, slicer
 from crossValidation import chooseBestSplitLen
