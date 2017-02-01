@@ -23,7 +23,6 @@ def kalmanFilter(params, Xva):
       # pare che filter_update() restituisca un array che dovrebbe essere "mean estimate for 
       # state at time t+1 given observations from times [1...t+1]" quindi nel nostro caso dovrebbe
       # essere un array di dimensione 1, ma è una matrice 8x8!
-      y, next_covariance = kalman.filter_update(state_mean, state_covariance)
-      print('Y shape: ', y.shape)
+      predictions[t], next_covariance = kalman.filter_update(state_mean, state_covariance)
    
    return predictions
