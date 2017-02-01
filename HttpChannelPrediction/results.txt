@@ -19,9 +19,10 @@ Optimal split size : [ 5.  3.  3.]
 Training error other SVM tram:  0.275579607677
 Validation error other SVM tram:  0.286957045543
 
-
+x_t+1		A		x_t
+			
+x2		0 1 0 0 0	x1
+x3		0 0 1 0 0   x2
+x4	=	0 0 0 1 0 *	x3
+x5		0 0 0 0 1   x4
 x6		a b c d e	x5
-x5		1 0 0 0 0	x4
-x4	=	0 1 0 0 0 * x3
-x3		0 0 1 0 0	x2
-x2		0 0 0 1 0	x1

@@ -30,6 +30,9 @@
     <Compile Include="dataAnalysis4G.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="kalman.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="utils.py">
       <SubType>Code</SubType>
     </Compile>

@@ -1,6 +1,6 @@
 import numpy as np
-from sklearn.cross_validation import train_test_split
-import matplotlib.pyplot as pl
+from sklearn import model_selection 
+from matplotlib import pyplot as pl
 
 from utils import slicer
 
@@ -11,7 +11,7 @@ def chooseBestSplitLen(data, model, max_size, testPerc = 0.33, plot = False):
    for sliceLen in range(2,max_size):
       samples = slicer(data,sliceLen, True)
       X,Y = samples[:, :sliceLen-1], samples[:,sliceLen-1]
-      Xtr, Xva, Ytr, Yva = train_test_split(X, Y, test_size=testPerc)
+      Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=testPerc)
       
       model.fit(Xtr, Ytr)
       training_error[sliceLen]   = 1-model.score(Xtr,Ytr)
