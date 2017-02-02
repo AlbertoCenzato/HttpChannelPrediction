@@ -52,7 +52,7 @@ from sklearn import svm
 data, N = dataLoaderVec('tram')
 parameters = {'C':[0.001, 0.01, 0.1, 100000, 1000000], 'epsilon':[0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]}
 svr = svm.LinearSVR()
-clf = model_selection.GridSearchCV(svr, parameters, verbose = 3)
+clf = model_selection.GridSearchCV(svr, parameters, verbose = 0)
 samples = slicer(data, tram_opt_dim, True)
 X,Y = samples[:, :tram_opt_dim-1], samples[:,tram_opt_dim-1]
 Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=testPerc)
@@ -69,13 +69,13 @@ print('Validation error optimal SVM tram: ', 1-clf.score(Xva,Yva))
 from kalman import kalmanFilter
 
 best_params = clf.best_estimator_.coef_
+print('tram_opt_dim: ', tram_opt_dim)
 predictions = kalmanFilter(best_params,Xva)
-for t in range(0,car_opt_dim(predictions)):
-   print('predizione: ', predictions[t])
-   print('valore vero: ', Yva[t])
 
 from matplotlib import pyplot as plt
 
-plt.plot(predictions)
+plt.figure()
+plt.plot(predictions[1000:1100])
+plt.plot(Yva[1000:1100])
 plt.show()
    
