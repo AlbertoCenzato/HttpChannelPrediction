@@ -18,11 +18,6 @@ def kalmanFilter(params, Xva):
    for t in range(0, numOfSamples):
       means, covariances = kalman.filter(Xva[t,:])
 
-      # questa riga d� problemi. lancia un'eccezione: setting an array element with a sequence.
-      # dalla documentazione (https://pykalman.github.io/#pykalman.KalmanFilter.filter_update)
-      # pare che filter_update() restituisca un array che dovrebbe essere "mean estimate for 
-      # state at time t+1 given observations from times [1...t+1]" quindi nel nostro caso dovrebbe
-      # essere un array di dimensione 1, ma è una matrice 8x8!
       next_mean, next_covariance = kalman.filter_update(means[-1], covariances[-1])
       predictions[t] = next_mean[-1]
    
