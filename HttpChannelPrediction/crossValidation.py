@@ -21,7 +21,7 @@ def chooseBestSplitLen(data, model, max_size, testPerc = 0.33, plot = False):
       pl.figure()
       pl.plot(training_error, 'b', label='Training error')
       pl.plot(validation_error,'r', label='Validation error')
-      pl.xlabel('Split size')
+      pl.xlabel('Model dimension')
       pl.ylabel('Error')
       pl.grid()
       pl.legend(loc=4)
