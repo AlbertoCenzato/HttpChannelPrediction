@@ -26,3 +26,49 @@ x3		0 0 1 0 0   x2
 x4	=	0 0 0 1 0 *	x3
 x5		0 0 0 0 1   x4
 x6		a b c d e	x5
+
+
+
+
+
+>>> execfile('dataAnalysis4G.py')
+----- PREDICTION FOR TRAMS -----
+('optimal split size', 9)
+('Training error linReg Trams: ', 0.27487435439099039)
+('Validation error linReg Trams: ', 0.27947865765531243)
+----- PREDICTION FOR CARS -----
+('optimal split size', 5)
+('Training error linReg Cars: ', 0.35820723598175386)
+('Validation error linReg Cars: ', 0.47410080011274824)
+----- PREDICTION FOR TRASPORTI URBANI -----
+('optimal split size', 7)
+('Training error linReg trasporti urbani: ', 0.12946456575351106)
+('Validation error linReg trasporti urbani: ', 0.13970602381769437)
+----- PREDICTION FOR TRAINS -----
+('optimal split size', 7)
+('Training error linReg cars and trains: ', 0.2946995543182408)
+('Validation error linReg cars and trains: ', 0.33289566412320637)
+
+------------------------------
+------- USING SVMs --------
+-------------------------------
+----- PREDICTION FOR TRAMS -----
+('optimal split size', 9)
+('Best params: ', {'epsilon': 0.6, 'C': 0.1})
+('Training error optimal SVM tram: ', 0.29980764260686432)
+('Validation error optimal SVM tram: ', 0.27566918947814001)
+----- PREDICTION FOR CARS -----
+('optimal split size', 4)
+('Best params: ', {'epsilon': 0.3, 'C': 0.1})
+('Training error optimal SVM cars: ', 2.7199094513921036)
+('Validation error optimal SVM cars: ', 2.8373339674637275)
+----- PREDICTION FOR trasporti_urbani -----
+('optimal split size', 7)
+('Best params: ', {'epsilon': 0.6, 'C': 0.1})
+('Training error optimal SVM trasporti_urbani: ', 0.14043414663315656)
+('Validation error optimal SVM trasporti_urbani: ', 0.13923876712511718)
+----- PREDICTION FOR cars_and_trains -----
+('optimal split size', 5)
+('Best params: ', {'epsilon': 0.2, 'C': 0.1})
+('Training error optimal SVM cars_and_trains: ', 0.37543016661446271)
+('Validation error optimal SVM cars_and_trains: ', 0.3941263461997665)
