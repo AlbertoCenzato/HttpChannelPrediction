@@ -3,6 +3,7 @@ import numpy as np
 from utils import dataLoaderMat, dataLoaderVec, slicer
 from crossValidation import chooseBestSplitLen
 from sklearn import model_selection
+from sklearn import preprocessing
 
  #-------------------------------------------------
  #--------- LINEAR REGRESSION ---------------------
@@ -10,40 +11,42 @@ from sklearn import model_selection
 
 data, N = dataLoaderVec('tram')
 
-# Standardize the Features Matrix
-from sklearn import preprocessing
-scaler = preprocessing.StandardScaler().fit(X)
-Xtr = scaler.transform(Xtr)
-Xva = scaler.transform(Xva)  # use the same transformation on test data
 
 from sklearn import linear_model as lm
 
 # choose optimal split size (model dimension)
-'''
-svr = lm.LinearSVR(C=0.03, epsilon=0.5)
-tram_opt_dim = chooseBestSplitLen(data, svr, max_size = 10, plot = True)
+
+linReg = lm.LinearRegression()
+tram_opt_dim = chooseBestSplitLen(data, linReg, max_size = 10, plot = True)
 samples = slicer(data, tram_opt_dim, True)
-X,Y = samples[:, :tram_opt_dim-1], samples[:,tram_opt_dim-1]
+X,Y = samples[:, :-1], samples[:,-1]
 Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=0.66)
-svr.fit(Xtr, Ytr)
+scaler = preprocessing.StandardScaler().fit(X)
+Xtr = scaler.transform(Xtr)
+Xva = scaler.transform(Xva) 
+linReg.fit(Xtr, Ytr)
 print('optimal split size' , tram_opt_dim)
-print('Training error linReg Trams: '  , 1-svr.score(Xtr,Ytr))
-print('Validation error linReg Trams: ', 1-svr.score(Xva,Yva))
-'''
+print('Training error linReg Trams: '  , 1-linReg.score(Xtr,Ytr))
+print('Validation error linReg Trams: ', 1-linReg.score(Xva,Yva))
+
 
 # same as above, using cars
-'''
+
 data, N = dataLoaderVec('car')
 linReg = lm.LinearRegression()
 car_opt_dim = chooseBestSplitLen(data, linReg, max_size = 10, plot = True)
 samples = slicer(data, car_opt_dim, True)
-X,Y = samples[:, :car_opt_dim-1], samples[:,car_opt_dim-1]
+X,Y = samples[:, :-1], samples[:,-1]
 Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=0.66)
+scaler = preprocessing.StandardScaler().fit(X)
+Xtr = scaler.transform(Xtr)
+Xva = scaler.transform(Xva) 
+
 linReg.fit(Xtr, Ytr)
 print('optimal split size' , car_opt_dim)
 print('Training error linReg Cars: '  , 1-linReg.score(Xtr,Ytr))
 print('Validation error linReg Cars: ', 1-linReg.score(Xva,Yva))
-'''
+
 
 #-------------------------------------------
 #------------ USING SVMs -------------------
@@ -61,17 +64,21 @@ data, N = dataLoaderVec('tram')
 testPerc = 0.66
 
 # choose optimal split size (model dimension)
-'''
+
 svr = svm.LinearSVR(C=0.03, epsilon=0.5)
 tram_opt_dim = chooseBestSplitLen(data, svr, max_size = 10, plot = True)
 samples = slicer(data, tram_opt_dim, True)
-X,Y = samples[:, :tram_opt_dim-1], samples[:,tram_opt_dim-1]
+X,Y = samples[:, :-1], samples[:,-1]
 Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=testPerc)
+scaler = preprocessing.StandardScaler().fit(X)
+Xtr = scaler.transform(Xtr)
+Xva = scaler.transform(Xva) 
+
 svr.fit(Xtr, Ytr)
 print('optimal split size' , tram_opt_dim)
 print('Training error linReg Trams: '  , 1-svr.score(Xtr,Ytr))
 print('Validation error linReg Trams: ', 1-svr.score(Xva,Yva))
-'''
+
 
 # choose optimal model parameters
 tram_opt_dim = 5
@@ -80,9 +87,13 @@ parameters = {'C':[0.01, 0.03, 0.05, 0.07, 0.09, 0.1], 'epsilon':[0.05, 0.1, 0.2
 svr = svm.LinearSVR()
 clf = model_selection.GridSearchCV(svr, parameters, verbose = 0)
 samples = slicer(data, tram_opt_dim, True)
-X,Y = samples[:, :tram_opt_dim-1], samples[:,-1]
+X,Y = samples[:, :-1], samples[:,-1]
 print(X[0,:], Y[0])
 Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=testPerc)
+scaler = preprocessing.StandardScaler().fit(X)
+Xtr = scaler.transform(Xtr)
+Xva = scaler.transform(Xva) 
+
 print('Xva shape: ', Xva.shape)
 print('Yva shape: ', Yva.shape)
 clf.fit(Xtr, Ytr)

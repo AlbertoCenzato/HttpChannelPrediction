@@ -9,8 +9,7 @@ def chooseBestSplitLen(data, model, max_size, testPerc = 0.33, plot = False):
    validation_error = np.zeros((max_size))
 
    for sliceLen in range(2,max_size):
-      samples = slicer(data,sliceLen, True)
-      X,Y = samples[:, :sliceLen-1], samples[:,sliceLen-1]
+      X,Y = slicer(data,sliceLen, True)
       Xtr, Xva, Ytr, Yva = model_selection.train_test_split(X, Y, test_size=testPerc)
       
       model.fit(Xtr, Ytr)
